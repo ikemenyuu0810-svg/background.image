@@ -34,31 +34,6 @@
     opacity: 1;
   }
 
-  /* ボタンUI */
-  #controls {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-  }
-
-  #controls button {
-    padding: 10px 16px;
-    font-size: 14px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    background: rgba(0,0,0,0.6);
-    color: #fff;
-  }
-
-  #controls button:hover {
-    background: rgba(0,0,0,0.8);
-  }
-
-  /* サンプル用コンテンツ */
   main {
     padding: 40px;
     color: white;
@@ -68,27 +43,16 @@
 </head>
 <body>
 
-<!-- 背景 -->
 <div id="bg-container">
   <img class="bg-img active" src="background-image/bgimg-1.jpg">
   <img class="bg-img" src="">
 </div>
 
-<!-- 切り替えボタン -->
-<div id="controls">
-  <button id="prev">◀ 前へ</button>
-  <button id="next">次へ ▶</button>
-</div>
-
-<!-- ページ内容 -->
 <main>
-  <h1>縦長ページ</h1>
-  <p>背景は10秒ごとに自動切替＋手動操作可能</p>
   <div style="height:3000px"></div>
 </main>
 
 <script>
-  /* 画像リト */
   const images = [];
   for (let i = 1; i <= 16; i++) {
     images.push(`background-image/bgimg-${i}.jpg`);
@@ -99,53 +63,19 @@
   let index = 0;
 
   const INTERVAL = 10000; // 10秒
-  let timer;
 
-  function showImage(newIndex) {
+  function showNextImage() {
     const next = (visible + 1) % 2;
-    index = (newIndex + images.length) % images.length;
+    index = (index + 1) % images.length;
 
     bgImgs[next].src = images[index];
-
     bgImgs[visible].classList.remove("active");
     bgImgs[next].classList.add("active");
 
     visible = next;
   }
 
-  function nextImage() {
-    showImage(index + 1);
-    resetTimer();
-  }
-
-  function prevImage() {
-    showImage(index - 1);
-    resetTimer();
-  }
-
-  function startTimer() {
-    timer = setInterval(() => {
-      showImage(index + 1);
-    }, INTERVAL);
-  }
-
-  function resetTimer() {
-    clearInterval(timer);
-    startTimer();
-  }
-
-  document.getElementById("next").addEventListener("click", nextImage);
-  document.getElementById("prev").addEventListener("click", prevImage);
-
-  startTimer();
-
-  /* ズーム・リサイズ対策（保険） */
-  window.addEventListener("resize", () => {
-    bgImgs.forEach(img => {
-      img.style.width = "100%";
-      img.style.height = "100%";
-    });
-  });
+  setInterval(showNextImage, INTERVAL);
 </script>
 
 </body>
